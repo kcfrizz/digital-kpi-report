@@ -1,0 +1,166 @@
+---
+title: "Regional News Platform - Digital KPI Report"
+output: html_document
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(dplyr)
+library(scales)
+```
+
+## Overview
+
+This report tracks three core KPIs for a regional news platform using anonymized, simulated data. The code and analytical approach reflect real workflows used to monitor digital audience performance.
+
+---
+
+## Section 1: Online Visits - Year over Year
+
+```{r visits-bar}
+jan_visits <- data.frame(
+  Year = c(2021, 2022, 2023, 2024, 2025),
+  Visits = c(2100000, 2450000, 1980000, 2750000, 3100000)
+)
+
+ggplot(jan_visits, aes(x = Year, y = Visits,
+    fill = ifelse(Year == 2023, "tomato3",
+           ifelse(Year == 2025, "darkgreen", "grey")))) +
+  geom_bar(stat = "identity", width = .5) +
+  geom_text(aes(label = comma(Visits)), vjust = -0.5, size = 3) +
+  scale_y_continuous(limits = c(0, 3800000), labels = comma) +
+  scale_x_continuous(breaks = jan_visits$Year) +
+  scale_fill_identity() +
+  labs(title = "Online Visits: Year-over-Year",
+       subtitle = "January Performance",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.6))
+```
+
+---
+
+## Section 2: Video Plays - Year over Year
+
+```{r video-bar}
+jan_vp <- data.frame(
+  Year = c(2021, 2022, 2023, 2024, 2025),
+  Video_Plays = c(3800000, 4200000, 3500000, 5100000, 6200000)
+)
+
+ggplot(jan_vp, aes(x = Year, y = Video_Plays,
+    fill = ifelse(Year == 2023, "tomato3",
+           ifelse(Year == 2025, "darkgreen", "grey")))) +
+  geom_bar(stat = "identity", width = .5) +
+  geom_text(aes(label = comma(Video_Plays)), vjust = -0.5, size = 3) +
+  scale_y_continuous(limits = c(0, 7500000), labels = comma) +
+  scale_x_continuous(breaks = jan_vp$Year) +
+  scale_fill_identity() +
+  labs(title = "Video Plays: Year-over-Year",
+       subtitle = "January Performance",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.6))
+```
+
+---
+
+## Section 3: Streaming Minutes - Year over Year
+
+```{r streaming-bar}
+jan_smw <- data.frame(
+  Year = c(2021, 2022, 2023, 2024, 2025),
+  Streaming_Minutes = c(2800000, 3600000, 3200000, 4400000, 5300000)
+)
+
+ggplot(jan_smw, aes(x = Year, y = Streaming_Minutes,
+    fill = ifelse(Year == 2022, "blue",
+           ifelse(Year == 2025, "darkgreen", "grey")))) +
+  geom_bar(stat = "identity", width = .5) +
+  geom_text(aes(label = comma(Streaming_Minutes)), vjust = -0.5, size = 3) +
+  scale_y_continuous(limits = c(0, 6500000), labels = comma) +
+  scale_x_continuous(breaks = jan_smw$Year) +
+  scale_fill_identity() +
+  labs(title = "Streaming Minutes Watched: Year-over-Year",
+       subtitle = "January Performance",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.6))
+```
+
+---
+
+## Section 4: Monthly Trends
+
+```{r monthly-setup}
+month_levels <- c("February", "March", "April", "May", "June",
+                  "July", "August", "September", "October",
+                  "November", "December", "January")
+```
+
+### 4a: Visits
+
+```{r visits-trend}
+visits_yl <- data.frame(
+  Month = factor(month_levels, levels = month_levels),
+  Visits = c(2200000, 2400000, 2150000, 2300000, 2100000,
+             2050000, 2200000, 2500000, 2650000, 2800000, 2900000, 3100000)
+)
+
+ggplot(visits_yl, aes(x = Month, y = Visits, group = 1)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkgreen", linetype = "dashed") +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Online Visits - Monthly Trend (Feb 2024 to Jan 2025)",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### 4b: Video Plays
+
+```{r video-trend}
+video_yl <- data.frame(
+  Month = factor(month_levels, levels = month_levels),
+  Video_Plays = c(3900000, 4100000, 3800000, 4000000, 3700000,
+                  3600000, 3900000, 4400000, 4700000, 5100000, 5500000, 6200000)
+)
+
+ggplot(video_yl, aes(x = Month, y = Video_Plays, group = 1)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkgreen", linetype = "dashed") +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Video Plays - Monthly Trend (Feb 2024 to Jan 2025)",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### 4c: Streaming Minutes
+
+```{r streaming-trend}
+smw_yl <- data.frame(
+  Month = factor(month_levels, levels = month_levels),
+  Streaming_Minutes = c(3100000, 3300000, 3000000, 3200000, 2900000,
+                        2800000, 3100000, 3600000, 3900000, 4200000, 4700000, 5300000)
+)
+
+ggplot(smw_yl, aes(x = Month, y = Streaming_Minutes, group = 1)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkgreen", linetype = "dashed") +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Streaming Minutes - Monthly Trend (Feb 2024 to Jan 2025)",
+       caption = "Source: Digital Analytics Platform") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+---
+
+## Summary
+
+All three KPIs show consistent upward trends across the annual cycle, with Q4 and January outpacing mid-year. This analysis was produced using R (ggplot2, dplyr, scales) and is designed to be reproduced monthly by updating the source data frames.
